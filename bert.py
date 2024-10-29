@@ -65,7 +65,7 @@ def read_all(port, size):
         data += port.read(size - len(data))
     assert len(data) == size
     return data
-    
+
 silent_mode = 0
 def print_packet(pinfo, cmdp, outbound):
     if silent_mode == 0:
@@ -85,17 +85,17 @@ def print_packet(pinfo, cmdp, outbound):
             else:
                 print(" <0x" + "{:02X}".format(cv_status) + ">", end="")
         print("")
-        
+
 
 class JIGClient(object):
     def __init__(self):
         self.is_open = False
-        
+
     def open(self, uart_port, baud):
         if self.is_open is False:
             self._port = serial.Serial(uart_port, baudrate=baud, timeout=0)
             self.is_open = True
-        
+
     def close(self):
         if self.is_open is True:
             self._port.close()
@@ -111,7 +111,7 @@ class JIGClient(object):
             c = self.read_all(1)
             data.append(c)
         return b''.join(data)
- 
+
     def checksum(self,s):
         csum=0
         for x in s:
@@ -166,7 +166,7 @@ def cmd_x110(keyv):
         exit(0)
 
     payload = response[0xD:0x2D]
-    
+
     shared_secret = bytes.fromhex(secret1data[c[8]])
     key1 = bytes.fromhex(key1table[c[8]])
     key2 = bytes.fromhex(key2table[c[8]])
@@ -199,7 +199,7 @@ def handle_cmd(user_cmd, argv):
         client.open(DEFAULT_PORT, 38400)
     match user_cmd:
         case "raw":
-            client.send_cmd(bytearray.fromhex(argv[2]), 1)           
+            client.send_cmd(bytearray.fromhex(argv[2]), 1)
             response = client.get_resp()
             if silent_mode == 0:
                 print("RESP: " + response.hex().upper())
@@ -443,7 +443,7 @@ def helper(in_interactive, caller):
     print(caller + " unlock-sdboot                               : unlock the T1 lock and boot into SD mode         : 0x103 + 0x110 (0)")
     print(caller + " unlock-all                                  : unlock 1,4,qa,nvs,sdboot                         : -----")
     print(caller + " [COMMANDu16] <SIZEu16> <DATA>               : execute a command, e.g. '0x105 0x2 03'           : -----")
-    
+
     print("")
     if in_interactive:
         print("client commands:")
@@ -462,7 +462,7 @@ if __name__ == "__main__":
     if len(uinput_argv) == 1:
         helper(False, uinput_argv[0])
         exit(0)
-       
+
     cmd = uinput_argv[1]
 
     if cmd[:1] == "!":
@@ -474,9 +474,9 @@ if __name__ == "__main__":
             pass
         except Exception as e:
             print(e)
-    
+
     client.close()
-    
+
 
 #client.send_cmd(cmd)
 #response = client.read_line()
