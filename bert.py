@@ -4,12 +4,12 @@
 PSVita v2 Syscon JIG Client by Proxima & SKGleba (R)
 
 '''
-import sys, os, struct, code, binascii
-import serial, time, re, math
+import sys
+import serial
 from Crypto.Cipher import AES
 import random
 
-DEFAULT_PORT = 'COM14'
+DEFAULT_PORT = '/dev/ttyUSB0'
 
 secret1data = {
     0x0: "80996FBBC8B4EBA30595F4D379A23BD0",
@@ -92,12 +92,12 @@ class JIGClient(object):
         self.is_open = False
         
     def open(self, uart_port, baud):
-        if self.is_open == False:
+        if self.is_open is False:
             self._port = serial.Serial(uart_port, baudrate=baud, timeout=0)
             self.is_open = True
         
     def close(self):
-        if self.is_open == True:
+        if self.is_open is True:
             self._port.close()
             self.is_open = False
 
@@ -195,7 +195,7 @@ def send_simple_cmd(cmd_ascii):
     print_packet("RESP", response.hex().upper(), False)
 
 def handle_cmd(user_cmd, argv):
-    if client.is_open == False:
+    if client.is_open is False:
         client.open(DEFAULT_PORT, 38400)
     match user_cmd:
         case "raw":
@@ -382,7 +382,7 @@ def interactive():
             case "!close":
                 client.close()
             case "!wait":
-                if client.is_open == True:
+                if client.is_open is True:
                     try:
                         line = client.get_resp()
                         if silent_mode != 2:
