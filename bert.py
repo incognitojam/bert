@@ -215,6 +215,9 @@ def handle_cmd(user_cmd, argv):
             send_simple_cmd("0301000000")
         case "lock-1":
             send_simple_cmd("0401000000")
+        case "get-date-string":
+            client.send_cmd(bytearray.fromhex("0701000000"), 0)
+            print(client.get_resp()[5:5+12].decode())
         case "power-off":
             send_simple_cmd("050100020000")
         case "power-on":
